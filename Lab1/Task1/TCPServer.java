@@ -28,10 +28,14 @@ class Connection extends Thread {
                 System.out.println("Connection:"+e.getMessage());}
     }
     public void run(){
-      try {                          // an echo server
-            String data = in.readUTF();                  
-            out.writeUTF(data);
-        } catch(EOFException e) {System.out.println("EOF:"+e.getMessage());
+        try {                          // an echo server
+            while(true)
+            {
+                String data = in.readUTF();                  
+                out.writeUTF(data);
+            }          
+        }
+         catch(EOFException e) {System.out.println("EOF:"+e.getMessage());
         } catch(IOException e) {System.out.println("IO:"+e.getMessage());
         } finally{
             try {
