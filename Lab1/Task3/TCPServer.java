@@ -1,7 +1,9 @@
 import java.net.*;
 import java.io.*;
 public class TCPServer {
+
   public static void main (String args[]) {
+       
         try{
             int serverPort = 7896; 
             ServerSocket listenSocket = new ServerSocket(serverPort);
@@ -31,8 +33,10 @@ class Connection extends Thread {
         try {                          // an echo server
             while(true)
             {
-                String data = in.readUTF();                  
-                out.writeUTF(data);
+                String data = in.readUTF();
+                if(!data.equals("test timeout")){
+                out.writeUTF("Recieved Message:" + data);
+                }                  
             }          
         }
          catch(EOFException e) {System.out.println("EOF:"+e.getMessage());
