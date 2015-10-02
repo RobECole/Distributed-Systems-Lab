@@ -15,10 +15,9 @@ public class UDPClient{
       try {
           for(int i = 0; i < messageCount; i++){
             aSocket = new DatagramSocket();
-            //aSocket.setSoTimeout(1000);
+            aSocket.setSoTimeout(500);
             
             String packedData = i + "|" + message + "|" + messageCount;
-            System.out.println(packedData);
             byte [] m = packedData.getBytes();
             
             InetAddress aHost = InetAddress.getByName(name);
@@ -26,18 +25,17 @@ public class UDPClient{
             DatagramPacket request = new DatagramPacket(m, message.length(), aHost, serverPort);
             aSocket.send(request);
             
-            /*                                  
-            byte[] buffer = new byte[1000];
+                                              
+            byte[] buffer = new byte[100];
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
             try {
                 aSocket.receive(reply);
             }catch (SocketTimeoutException e){
-                System.out.println("Timeout! Packet Lost");
                 aSocket.close();
             }   
            
-            System.out.println("Reply: " + new String(reply.getData()) + i);
-            */
+            System.out.println("Reply: " + new String(reply.getData()));
+            
           }
                
       }catch (SocketException e){System.out.println("Socket: " + e.getMessage());

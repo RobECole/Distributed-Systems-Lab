@@ -8,22 +8,26 @@ public class TCPClient {
         // arguments supply message and hostname of destination
         Socket s = null;
         Scanner input = new Scanner(System.in);
+        int messageSize = Integer.parseInt(args[1]);
+        int messageCount = Integer.parseInt(args[2]);
+        String message = "";
+        for (int j=0; j<messageSize; j++){
+            message = message + "A";
+        }
         try{
             int serverPort = 7896;
             s = new Socket(args[0], serverPort);
             s.setSoTimeout(5000);    
  
-            while(true){
+            for(int j=0; j<messageCount ; j++){
                 DataInputStream in = new DataInputStream( s.getInputStream());
                 DataOutputStream out = new DataOutputStream( s.getOutputStream());
-                String message;
-                System.out.println("Enter Message:");
-                message = input.nextLine();
-                out.writeUTF(message);
-         // UTF is a string encoding see Sn 4.3 
-                String data = in.readUTF();
-                System.out.println("Received: "+ data);
-            }
+                String dataPacket = j + "|" + message;
+                out.writeUTF(dataPacket);
+         // Try to read incoming message
+              String data = in.readUTF();
+              System.out.println("Received: "+ data); 
+           }
         }
         catch (SocketTimeoutException ste){
             System.out.println("STE:" + ste.getMessage());

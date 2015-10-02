@@ -30,13 +30,22 @@ class Connection extends Thread {
                 System.out.println("Connection:"+e.getMessage());}
     }
     public void run(){
-        try {                          // an echo server
+        try {
+            int i = 0;                          // an echo server
             while(true)
             {
                 String data = in.readUTF();
-                if(!data.equals("test timeout")){
-                out.writeUTF("Recieved Message:" + data);
-                }                  
+                System.out.println("Recieved:" + data);
+                String [] starr = data.split("|",2);
+                int sequenceNo = Integer.parseInt(starr[0]);
+                if(i < sequenceNo){
+                    while(i < sequenceNo){
+                        System.out.println("PACKET LOST!");
+                        i++;   
+                    }
+                }
+                i++;
+                out.writeUTF("Recieved Message:" + data);                  
             }          
         }
          catch(EOFException e) {System.out.println("EOF:"+e.getMessage());

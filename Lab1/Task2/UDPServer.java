@@ -19,12 +19,7 @@ public class UDPServer{
               String data = new String(request.getData());
               String [] strarr = data.split("|",3);
               sequenceNo = Integer.parseInt(strarr[0]);
-              //total = Integer.parseInt(strarr[2]);
-              //Check packet is in sequence
-              System.out.print(sequenceNo);
-              System.out.println(i);
-             
-              
+              //Check packet is in sequence                       
               if (sequenceNo > i){
                   while(i < sequenceNo){
                     System.out.println("PACKET LOST!");
@@ -33,17 +28,8 @@ public class UDPServer{
               }
               i++;
               
-              //System.out.println("DETECTED PACKETS:" + sequence.length);
-              
-              
-              
-               /*
-                DatagramPacket reply = new DatagramPacket(request.getData(), 
-                        request.getLength(), request.getAddress(), request.getPort());
+                DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(), request.getAddress(), request.getPort());
                 aSocket.send(reply);
-                
-                
-                System.out.println("Reply: " + new String(request.getData())); */
             }
         }catch (SocketException e){
             System.out.println("Socket: " + e.getMessage());
