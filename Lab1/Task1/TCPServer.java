@@ -31,7 +31,8 @@ class Connection extends Thread {
         try {                          // an echo server
             while(true)
             {
-                String data = in.readUTF();                  
+                String data = in.readUTF();
+                System.out.println("Recieved:" + data);                  
                 out.writeUTF(data);
             }          
         }

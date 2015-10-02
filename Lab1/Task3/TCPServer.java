@@ -35,6 +35,7 @@ class Connection extends Thread {
             {
                 String data = in.readUTF();
                 if(!data.equals("test timeout")){
+                System.out.println("Recieved:" + data);
                 out.writeUTF("Recieved Message:" + data);
                 }                  
             }          
