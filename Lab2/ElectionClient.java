@@ -25,7 +25,7 @@ public class ElectionClient {
             for(int n=11; n < 16;n++){
                 election.vote("Mulhair", n);
             }
-            Hashtable<String, Integer> results = election.result();
+           Hashtable<String, Integer> results = election.result();
             System.out.println(results);
         } catch(Exception e) {
             System.err.println("ElectionClient exception: " + e.toString());
