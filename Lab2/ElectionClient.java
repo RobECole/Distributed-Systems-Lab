@@ -12,19 +12,16 @@ public class ElectionClient {
         //args[1]: port of registry on that server
         String host = args[0];
         int port = Integer.parseInt(args[1]);
-
+        Random rmd = new Random();
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);
             Election election = (Election) registry.lookup("Election");
             System.out.println("Server Found!");
             
-            for(int n=0; n < 10;n++){
-               election.vote("Trump",n);
+            for(int n=0; n < 100;n++){
+               election.vote("Trump",rmd.nextInt()*100);
             }
             
-            for(int n=11; n < 16;n++){
-                election.vote("Mulhair", n);
-            }
            Hashtable<String, Integer> results = election.result();
             System.out.println(results);
         } catch(Exception e) {

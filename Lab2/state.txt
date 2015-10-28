@@ -1,1 +1,1 @@
-{Mulhair=25, Trump=30}
+{Trump=200}

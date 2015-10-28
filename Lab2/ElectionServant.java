@@ -37,29 +37,37 @@ public class ElectionServant extends UnicastRemoteObject implements Election {
  	
 	 @Override
 	public void vote(String c, int vn) throws RemoteException{
-		
-		if(!usedVN.contains(vn)){
-			if (results.containsKey(c)){
-				int num = results.get(c);
-				num++;
-				results.put(c, num);
-				System.out.println("Inc");
-			}
-			else{
-				results.put(c, 1);
-				System.out.println("overide");
-			}
-			usedVN.add(vn);	
-			System.out.println("Successfully Votes!");
+		Mutex mutex = new Mutex();
+		try {
+			mutex.acquire();
+			try {
+				if(!usedVN.contains(vn)){
+					if (results.containsKey(c)){
+						int num = results.get(c);
+						num++;
+						results.put(c, num);
+						System.out.println("Inc");
+					}
+					else{
+						results.put(c, 1);
+						System.out.println("overide");
+					}
+				usedVN.add(vn);	
+				System.out.println("Successfully Votes!");
 			
-			try{
-			OutputStream os = new FileOutputStream("state.txt");
-			Writer osw = new OutputStreamWriter(os);
-			osw.write(results.toString());
-			osw.close();	
-			}
-			catch(FileNotFoundException e){}catch(IOException e){}
+				try{
+					OutputStream os = new FileOutputStream("state.txt");
+					Writer osw = new OutputStreamWriter(os);
+					osw.write(results.toString());
+					osw.close();	
+				}catch(FileNotFoundException e){}catch(IOException e){}
 				
+				}	
+			}finally{
+				mutex.release();
+			}
+		}catch(InterruptedException ie){
+			vote(c, vn);
 		}
 	}
 	
@@ -74,8 +82,11 @@ public class ElectionServant extends UnicastRemoteObject implements Election {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String state = br.readLine();
 		in.close();
-		return state;
-
-		
+		return state;	
+	}
+	
+	public class Mutex {
+   		public void acquire() throws InterruptedException { }
+   		public void release() { }
 	}
 }
