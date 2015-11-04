@@ -12,7 +12,4 @@ class Line {
         this.lineNumber = lineNumber;
     }
 
-        boolean isEnd() {
-        return lineNumber < 0;
-    }
 }

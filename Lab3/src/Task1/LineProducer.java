@@ -1,7 +1,5 @@
 package Task1;
 
-import java.util.concurrent.BlockingQueue;
-
 /**
  * Created by Robert on 28-Oct-2015.
  */
@@ -22,10 +20,9 @@ class LineProducer implements Runnable {
     {
         String fileName = "Data.txt";
         //produce message
-        FileIterator fi = new FileIterator(fileName);
+        FileIterator fi = new FileIterator(fileName,10);
         for(Line ln : fi) {
             try {
-                Thread.sleep(100);
                 bq.put(ln);
                 System.out.println("Produced :" + ln.content);
             } catch (InterruptedException e) {

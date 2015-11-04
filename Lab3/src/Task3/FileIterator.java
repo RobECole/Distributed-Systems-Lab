@@ -8,9 +8,11 @@ import java.util.Iterator;
 public class FileIterator implements Iterable<Line> {
 
     final String fileName;
+    final int repeat;
 
-    FileIterator(String filename) {
+    FileIterator(String filename, int repeat) {
         this.fileName = filename;
+        this.repeat = repeat;
     }
 
     @Override
@@ -19,7 +21,7 @@ public class FileIterator implements Iterable<Line> {
     }
 
     class SubClass implements Iterator<Line> {
-
+        public int count;
         // The stream we're reading from
         BufferedReader in;
 
@@ -28,8 +30,7 @@ public class FileIterator implements Iterable<Line> {
         long lineNo = 0;
 
         public SubClass() {
-            // Open the file and read and remember the first line.
-            // We peek ahead like this for the benefit of hasNext().
+            count = 1;
             try {
                 in = new BufferedReader(new FileReader(fileName));
                 nextline = in.readLine();
@@ -55,8 +56,15 @@ public class FileIterator implements Iterable<Line> {
                     nextline = in.readLine(); // Read another line
 
                     if (nextline == null) {
-                        in.close(); // And close on EOF
-                        return new Line(result, -1);
+                        if(count<repeat) {
+                            lineNo = 0;
+                            count++;
+                            in.close(); // And close on EOF
+                            in = new BufferedReader(new FileReader(fileName));
+                            nextline = in.readLine();
+                        }
+                        else
+                            return new Line(result, -1);
                     }
                 }
 
@@ -66,7 +74,6 @@ public class FileIterator implements Iterable<Line> {
                 throw new IllegalArgumentException(e);
             }
         }
-
 
     }
 }

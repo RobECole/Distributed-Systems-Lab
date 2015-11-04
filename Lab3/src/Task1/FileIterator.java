@@ -21,7 +21,7 @@ public class FileIterator implements Iterable<Line> {
     }
 
     class SubClass implements Iterator<Line> {
-
+        public int count;
         // The stream we're reading from
         BufferedReader in;
 
@@ -30,11 +30,10 @@ public class FileIterator implements Iterable<Line> {
         long lineNo = 0;
 
         public SubClass() {
-            // Open the file and read and remember the first line.
-            // We peek ahead like this for the benefit of hasNext().
+            count = 1;
             try {
-                in = new BufferedReader(new FileReader(fileName));
-                nextline = in.readLine();
+                    in = new BufferedReader(new FileReader(fileName));
+                    nextline = in.readLine();
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -49,26 +48,32 @@ public class FileIterator implements Iterable<Line> {
         // Return the next line, but first read the line that follows it.
         @Override
         public Line next() {
-            try {
-                String result = nextline;
-                // If we haven't reached EOF yet
-                if (nextline != null) {
-                    nextline = in.readLine(); // Read another line
+                try {
+                    String result = nextline;
                     lineNo++;
-                    if (nextline == null){
-                        in.close(); // And close on EOF
-                        return new Line(result,-1);
+                    // If we haven't reached EOF yet
+                    if (nextline != null) {
+                        nextline = in.readLine(); // Read another line
+
+                        if (nextline == null) {
+                            if(count<repeat) {
+                                lineNo = 0;
+                                count++;
+                                in.close(); // And close on EOF
+                                in = new BufferedReader(new FileReader(fileName));
+                                nextline = in.readLine();
+                            }
+                            else
+                            return new Line(result, -1);
+                        }
                     }
 
+                    // Return the line we read last time through.
+                    return new Line(result,lineNo);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(e);
                 }
-
-                // Return the line we read last time through.
-                return new Line(result,lineNo);
-            } catch (IOException e) {
-                throw new IllegalArgumentException(e);
-            }
         }
-
 
     }
 }

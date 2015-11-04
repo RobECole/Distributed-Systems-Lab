@@ -29,7 +29,6 @@ class LineConsumer implements Runnable {
             PrintWriter writer = new PrintWriter(output, "UTF-8");
 
             while(!Objects.equals((ln = bq.take()).content, "eof")){
-            Thread.sleep(10);
                 System.out.println("Consumed "+ ln.content);
                 String[] tokenLn = Util.words(ln.content);
                 for (String str: tokenLn){

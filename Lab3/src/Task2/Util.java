@@ -1,50 +1,35 @@
 package Task2;
 
 /**
- * Created by Robert on 29-Oct-2015.
+ *Provided by course instructor
  */
 public class Util {
     public static String[] words (String lineContent) {
         return lineContent.split("[\\p{Punct}\\s]+");
     }
 
-    public static int editDistance(String s1, String s2){
-        int len1 = s1.length();
-        int len2 = s2.length();
-
-        // len1+1, len2+1, because finally return dp[len1][len2]
-        int[][] dp = new int[len1 + 1][len2 + 1];
-
-        for (int i = 0; i <= len1; i++) {
-            dp[i][0] = i;
-        }
-
-        for (int j = 0; j <= len2; j++) {
-            dp[0][j] = j;
-        }
-
-        //iterate though, and check last char
-        for (int i = 0; i < len1; i++) {
-            char c1 = s1.charAt(i);
-            for (int j = 0; j < len2; j++) {
-                char c2 = s2.charAt(j);
-
-                //if last two chars equal
-                if (c1 == c2) {
-                    //update dp value for +1 length
-                    dp[i + 1][j + 1] = dp[i][j];
-                } else {
-                    int replace = dp[i][j] + 1;
-                    int insert = dp[i][j + 1] + 1;
-                    int delete = dp[i + 1][j] + 1;
-
-                    int min = replace > insert ? insert : replace;
-                    min = delete > min ? min : delete;
-                    dp[i + 1][j + 1] = min;
-                }
-            }
-        }
-
-        return dp[len1][len2];
+    private static int minimum(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
     }
+
+    // taken from:
+    // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java
+    public static int editDistance(String str1, String str2) {
+        int[][] distance = new int[str1.length() + 1][str2.length() + 1];
+
+        for (int i = 0; i <= str1.length(); i++)
+            distance[i][0] = i;
+        for (int j = 1; j <= str2.length(); j++)
+            distance[0][j] = j;
+
+        for (int i = 1; i <= str1.length(); i++)
+            for (int j = 1; j <= str2.length(); j++)
+                distance[i][j] = minimum(
+                        distance[i - 1][j] + 1,
+                        distance[i][j - 1] + 1,
+                        distance[i - 1][j - 1] + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1));
+
+        return distance[str1.length()][str2.length()];
+    }
+
 }

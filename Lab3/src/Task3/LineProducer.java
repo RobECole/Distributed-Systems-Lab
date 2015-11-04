@@ -1,6 +1,5 @@
 package Task3;
 
-import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by Robert on 28-Oct-2015.
@@ -12,7 +11,7 @@ class LineProducer implements Runnable {
 
     public LineProducer(MessageQueue<Line> q1)
     {
-    this.bq=q1;
+        this.bq=q1;
     }
     /**
      * puts strings from q1
@@ -22,7 +21,7 @@ class LineProducer implements Runnable {
     {
         String fileName = "Data.txt";
         //produce message
-        FileIterator fi = new FileIterator(fileName);
+        FileIterator fi = new FileIterator(fileName,10);
         for(Line ln : fi) {
             try {
                 Thread.sleep(100);
@@ -33,11 +32,13 @@ class LineProducer implements Runnable {
             }
         }
         //adding exit message
-        Line ln = new Line("eof", -1);
-        try {
-            bq.put(ln);
-        }catch (InterruptedException e){
-            e.printStackTrace();
+        for (int i = 0; i<Program.numWorkers; i++){
+            Line ln = new Line("eof", -1);
+            try {
+                bq.put(ln);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
     }
 }
