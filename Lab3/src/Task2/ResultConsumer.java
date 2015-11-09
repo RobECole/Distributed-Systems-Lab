@@ -26,7 +26,7 @@ class ResultConsumer implements Runnable {
     @Override
     public void run() {
         try{
-            Thread.sleep(10);
+          //  Thread.sleep(10);
             Line ln;
             PrintWriter writer = new PrintWriter(output, "UTF-8");
 
